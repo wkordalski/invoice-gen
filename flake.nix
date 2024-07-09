@@ -39,9 +39,9 @@
           src = pkgs.lib.cleanSource ./.;
           PDFLATEX_PATH = "${tex}/bin/pdflatex";
         };
-        overlays.default = final: prev: {
+        overlays.default = (final: prev: {
           invoice-gen = self.packages.default;
-        };
+        });
       }
     );
 }
