@@ -22,6 +22,14 @@
         buildInputs = with pkgs; [ tex ];
 
         rpath = pkgs.lib.makeLibraryPath buildInputs;
+
+        package = pkgs.rustPlatform.buildRustPackage rec {
+          pname = "invoice-gen";
+          version = "0.1";
+          cargoLock.lockFile = ./Cargo.lock;
+          src = pkgs.lib.cleanSource ./.;
+          PDFLATEX_PATH = "${tex}/bin/pdflatex";
+        };
       in
       rec {
         devShells.default = pkgs.mkShell {
@@ -32,15 +40,9 @@
             export RUST_BACKTRACE=1
           '';
         };
-        packages.default = pkgs.rustPlatform.buildRustPackage rec {
-          pname = "invoice-gen";
-          version = "0.1";
-          cargoLock.lockFile = ./Cargo.lock;
-          src = pkgs.lib.cleanSource ./.;
-          PDFLATEX_PATH = "${tex}/bin/pdflatex";
-        };
+        packages.default = package;
         overlays.default = (final: prev: {
-          invoice-gen = self.packages.default;
+          invoice-gen = package;
         });
       }
     );
