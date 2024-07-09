@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, margin=1.6cm]{geometry}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{dcolumn}
+\usepackage{siunitx}
+\sisetup{group-minimum-digits=3,group-separator = {\,},output-decimal-marker = {,},detect-weight=true}
+
+\setlength{\marginparwidth}{0pt}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\newcolumntype{d}{D{,}{,}{2}}
+
+
+\begin{document}
+
+\begin{center}
+\Large{Faktura nr\textbf{ {{invoice.invoice.id}} }}
+\end{center}
+
+\vspace{1cm}
+
+\begin{tabular}{>{\raggedleft}b{14cm} >{\large}l}
+	Data wystawienia: & {{invoice.invoice.created}} \\
+	Data wykonania: & {{invoice.invoice.done}} \\
+\end{tabular}
+
+\vspace{0.5cm}
+
+\begin{tabular}{p{0.5cm} p{7cm} p{8cm}}
+	& \makecell[l]{\large
+		\textbf{Sprzedawca} \\
+		{{invoice.seller.name}} \\
+		{{escape_dot_space invoice.seller.street}} \\
+		{{invoice.seller.region}} \\
+		{\small NIP:} {{invoice.seller.nip}}
+	}
+	& \makecell[l]{\large
+		\textbf{Nabywca} \\
+		{{invoice.buyer.name}} \\
+		{{escape_dot_space invoice.buyer.street}} \\
+		{{invoice.buyer.region}} \\
+		{\small NIP:} {{invoice.buyer.nip}}
+	}
+\end{tabular}
+
+\vspace{0.8cm}
+
+{\hspace{0.5cm}Numer konta bankowego: {\large {{invoice.payment.account}} ({{invoice.payment.bank}})}}
+
+\vspace{1.2cm}
+
+\begin{tabular}{>{\raggedleft}p{0.5cm} p{6cm} >{\centering\small}p{1.5cm} >{\centering}p{1.3cm} >{\centering}p{1.0cm} S[table-format=5.2] S[table-format=7.2]}
+	{\footnotesize\makecell[r]{\\Lp.}} & {\footnotesize\makecell[l]{\\Nazwa towaru / usługi}} & {\footnotesize\makecell{\\PKWiU}}    &   {\footnotesize\makecell{\\Jm.}}   & {\footnotesize\makecell{\\Ilość}} & \multicolumn{1}{c}{\makecell[r]{\footnotesize Wartość jedn. \\ \footnotesize\lbrack PLN\rbrack}} & \multicolumn{1}{c}{\makecell[r]{\footnotesize Wartość łączna \\ \footnotesize\lbrack PLN\rbrack}} \\
+	\hline
+    {{#each invoice.products}}
+	{{inc @index}}. & {{name}} & {{pkd}} & {{unit}} &    {{quantity}} & {{pln price}} & {{pln (mul quantity price)}} \\
+    {{/each}}
+	\hline
+	\multicolumn{5}{l}{\scriptsize Sprzedawca zwolniony podmiotowo z podatku VAT} & \multicolumn{1}{c}{\makecell[r]{\small Razem:}} & \bfseries {{pln sum}} \\
+\end{tabular}
+
+\vspace{1cm}
+
+\begin{tabular}{>{\raggedleft}p{3cm} >{\large}p{5cm}}
+	Forma płatności: & przelew \\
+	Termin płatności: & {{invoice.payment.date}} \\
+\end{tabular}	
+
+\vspace{1.5cm}
+
+\begin{tabular}{p{10cm} p{8cm}}
+	& \makecell[c]{\large
+		Fakturę wystawił \vspace{0.2cm} \\
+		{\Large {{invoice.seller.name}}}
+	}
+\end{tabular}
+
+\vfill
+
+Faktura nr\textbf{ {{invoice.invoice.id}} }
+
+\end{document}
