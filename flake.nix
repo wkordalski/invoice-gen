@@ -13,11 +13,13 @@
           inherit system;
         };
 
-        nativeBuildInputs = with pkgs; [
-          
-        ];
 
-        buildInputs = with pkgs; [];
+        tex = pkgs.texlive.combine {
+          inherit (pkgs.texlive) scheme-minimal latex-bin tools amsmath polski geometry makecell siunitx;
+        };
+
+        nativeBuildInputs = with pkgs; [ ];
+        buildInputs = with pkgs; [ tex ];
 
         rpath = pkgs.lib.makeLibraryPath buildInputs;
       in
@@ -35,7 +37,11 @@
           version = "0.1";
           cargoLock.lockFile = ./Cargo.lock;
           src = pkgs.lib.cleanSource ./.;
+          PDFLATEX_PATH = "${tex}/bin/pdflatex";
+        };
+        overlays.default = final: prev: {
+          invoice-gen = self.packages.default;
         };
       }
-    )
+    );
 }
