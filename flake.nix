@@ -42,7 +42,7 @@
         };
         packages.default = package;
         overlays.default = (final: prev: {
-          invoice-gen = package;
+          invoice-gen = self.packages.${prev.system}.default;
         });
       }
     );
